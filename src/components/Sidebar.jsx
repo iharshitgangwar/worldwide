@@ -7,9 +7,7 @@ function Sidebar() {
      return <div className={styles.sidebar}>
           <Logo />
           <AppNav />
-          <p>List Of Cities</p>
           <Outlet />
-
      </div>
 }
 
