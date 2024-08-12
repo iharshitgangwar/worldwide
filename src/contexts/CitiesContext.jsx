@@ -1,4 +1,4 @@
-import { act, createContext, useContext, useEffect, useReducer, useState } from "react"
+import { createContext, useContext, useEffect, useReducer } from "react"
 
 const CitiesContext = createContext()
 const initialState = {
@@ -7,19 +7,16 @@ const initialState = {
      isLoading: false,
 }
 const reducer = (state, action) => {
-
      switch (action.type) {
-          case "getCities": return { ...state, cities: action.payload }
+          case "getCities": return { ...state, cities: action.payload, isLoading: false }
           case "addCity":
-               return { ...state, cities: [...state.cities, action.payload] }
+               return { ...state, cities: [...state.cities, action.payload], isLoading: false }
           case "deleteCity":
-               return { ...state, cities: state.cities.filter(city => city.id !== action.payload) }
+               return { ...state, cities: state.cities.filter(city => city.id !== action.payload), isLoading: false }
           case "currentCity":
-               return { ...state, currentCity: action.payload }
+               return { ...state, currentCity: action.payload, isLoading: false }
           case "isLoading":
                return { ...state, isLoading: true }
-          case "isNotLoading":
-               return { ...state, isLoading: false }
           default: return state
      }
 
@@ -34,9 +31,6 @@ function CitiesProvider({ children }) {
                dispatch({ type: "getCities", payload: data })
           } catch (error) {
                console.error('Error fetching data:', error);
-          }
-          finally {
-               dispatch({ type: 'isNotLoading' })
           }
      }
      useEffect(() => {
@@ -60,9 +54,6 @@ function CitiesProvider({ children }) {
           } catch (error) {
                console.error('Error fetching data:', error);
           }
-          finally {
-               dispatch({ type: 'isNotLoading' })
-          }
      }
 
      async function deleteCity(id) {
@@ -79,12 +70,10 @@ function CitiesProvider({ children }) {
           } catch (error) {
                console.error('Error fetching data:', error);
           }
-          finally {
-               dispatch({ type: 'isNotLoading' })
-          }
      }
 
      async function getCity(id) {
+          if (id === state.currentCity.id) return
           try {
                dispatch({ type: 'isLoading' })
                const response = await fetch(`http://localhost:8000/cities/${id}`);
@@ -92,9 +81,6 @@ function CitiesProvider({ children }) {
                dispatch({ type: 'currentCity', payload: data })
           } catch (error) {
                console.error('Error fetching data:', error);
-          }
-          finally {
-               dispatch({ type: 'isNotLoading' })
           }
      }
      return (

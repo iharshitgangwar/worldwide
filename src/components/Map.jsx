@@ -6,6 +6,7 @@ import { useCities } from '../contexts/CitiesContext';
 import { useGeoLocation } from '../hooks/useGeoLocation'
 import Button from './Button';
 import { useUrlPosition } from '../hooks/useUrlPosition';
+import User from './User';
 function Map() {
      const { lat, lng } = useUrlPosition()
      const [position, setPosition] = useState(['40', '0'])
@@ -23,6 +24,7 @@ function Map() {
      }, [geoLocationPosition])
      return (
           <div className={styles.mapContainer}>
+               <User />
                <Button type="position" onClick={getPosition}>{isLoadingPosition ? 'Loading....' : 'Your Position'}</Button>
                <MapContainer center={position} zoom={13} scrollWheelZoom={true} className={styles.map}>
                     <TileLayer
