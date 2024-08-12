@@ -17,9 +17,11 @@ function City() {
   const { currentCity, getCity, isLoading } = useCities()
   const { cityName, emoji, date, notes } = currentCity;
   const { id } = useParams();
+  // before it was creating infinite render so we assignd getcity to usecalback 
+  // so it be memoize the value and only run only if id changes
   useEffect(() => {
     getCity(id)
-  }, [id])
+  }, [id, getCity])
   if (isLoading) return <Spinner />
   return (
     <div className={styles.city}>

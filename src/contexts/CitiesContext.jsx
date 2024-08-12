@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useReducer } from "react"
+import { createContext, useCallback, useContext, useEffect, useReducer } from "react"
 
 const CitiesContext = createContext()
 const initialState = {
@@ -71,8 +71,7 @@ function CitiesProvider({ children }) {
                console.error('Error fetching data:', error);
           }
      }
-
-     async function getCity(id) {
+     const getCity = useCallback(async function getCity(id) {
           if (id === state.currentCity.id) return
           try {
                dispatch({ type: 'isLoading' })
@@ -82,7 +81,7 @@ function CitiesProvider({ children }) {
           } catch (error) {
                console.error('Error fetching data:', error);
           }
-     }
+     }, [state.currentCity.id])
      return (
           <CitiesContext.Provider
                value={{
